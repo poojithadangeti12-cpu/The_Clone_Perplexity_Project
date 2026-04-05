@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>perplexity - Ask anything</title>
+    <meta name="description" content="AI-powered search assistant with real-time web search and source citations.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <nav class="top-nav">
+        <div class="nav-left">
+            <span class="pro-badge hidden" id="premium-badge"><i class="fa-solid fa-crown"></i> PRO</span>
+        </div>
+        <div class="nav-right" id="user-controls">
+            <button id="login-trigger" class="nav-btn">Login</button>
+            <button id="signup-trigger" class="nav-btn primary">Sign Up</button>
+        </div>
+    </nav>
+
+    <div class="dashboard-wrapper">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h3><i class="fa-solid fa-clock-rotate-left"></i> History</h3>
+            </div>
+            <div id="history-container" class="history-list">
+                <div class="history-empty">No previous chats</div>
+            </div>
+            <div class="sidebar-footer">
+                <div class="premium-sidebar-card">
+                    <div class="premium-badge-mini">3 FREE TRIALS</div>
+                    <div class="premium-card-header">
+                        <i class="fa-solid fa-crown" style="color: #facc15;"></i>
+                        <span>Premium Plan</span>
+                    </div>
+                    <div class="premium-card-price">₹299 / mo</div>
+                    <ul class="premium-card-benefits">
+                        <li><i class="fa-solid fa-bolt"></i> Unlimited AI Reviews</li>
+                        <li><i class="fa-solid fa-check"></i> Advanced Deep Audit</li>
+                        <li><i class="fa-solid fa-check"></i> Priority Responses</li>
+                        <li><i class="fa-solid fa-check"></i> Pro Multi-Engine Search</li>
+                    </ul>
+                    <button class="upgrade-btn-sm" onclick="alert('Proceeding to Checkout...')">Upgrade Pro</button>
+                </div>
+
+            </div>
+        </aside>
+
+        <main class="main-content-container">
+            <div class="container animate-in">
+                <h1 class="logo">perplexity</h1>
+        
+                <div class="search-section">
+                    <!-- Context Holder -->
+                    <div id="context-badge" class="context-badge hidden">
+                        <i class="fa-solid fa-file-pdf"></i>
+                        <span id="filename-display">filename.pdf</span>
+                        <button id="review-btn" class="review-btn">Review Deck</button>
+                        <button id="clear-context" class="clear-btn">&times;</button>
+                    </div>
+        
+                    <div class="search-container">
+                        <textarea id="search-input" placeholder="Ask anything..." rows="1" autofocus></textarea>
+                        
+                        <div class="search-toolbar">
+                            <div class="toolbar-left">
+                                <button class="icon-btn" id="plus-btn" title="Upload PDF">
+                                    <i class="fa-solid fa-plus"></i>
+                                </button>
+                                <button class="toolbar-chip" id="computer-toggle">
+                                    <i class="fa-solid fa-desktop"></i>
+                                    <span>Computer +</span>
+                                </button>
+                                <button class="toolbar-chip highlight" id="toolbar-pitch-deck">
+                                    <i class="fa-solid fa-magnifying-glass-chart"></i>
+                                    <span>Analyze Deck</span>
+                                </button>
+                            </div>
+                            
+                            <div class="toolbar-right">
+                                <div class="model-dropdown" id="model-select">
+                                    <span>Model</span>
+                                    <i class="fa-solid fa-chevron-down"></i>
+                                </div>
+                                <div class="voice-help" id="voice-help">
+                                    Try Voice <i class="fa-solid fa-arrow-right"></i>
+                                </div>
+                                <button class="icon-btn" title="Microphone">
+                                    <i class="fa-solid fa-microphone"></i>
+                                </button>
+                                <button class="voice-btn" id="submit-btn">
+                                    <i class="fa-solid fa-waveform-lines"></i>
+                                    <i class="fa-solid fa-volume-high" style="display: none;"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        
+                <div class="suggestions-section" id="suggestions">
+                    <div class="suggestions-header">
+                        <i class="fa-solid fa-desktop"></i>
+                        <span>Try Computer</span>
+                    </div>
+                    
+                    <div class="chip-row">
+                        <div class="suggestion-chip" id="pitch-deck-chip">
+                            <i class="fa-solid fa-magnifying-glass-chart"></i>
+                            <span>Analyze Pitch Deck</span>
+                        </div>
+                        <div class="suggestion-chip" data-query="Organise my life">
+                            <i class="fa-solid fa-list-check"></i>
+                            <span>Organise my life</span>
+                        </div>
+                        <div class="suggestion-chip" data-query="Monitor the situation">
+                            <i class="fa-solid fa-eye"></i>
+                            <span>Monitor the situation</span>
+                        </div>
+                        <div class="suggestion-chip" data-query="Help me learn">
+                            <i class="fa-solid fa-lightbulb"></i>
+                            <span>Help me learn</span>
+                        </div>
+                    </div>
+        
+                    <div class="suggestion-list">
+                        <div class="suggestion-item" data-query="Set up a weekly review system every Sunday">
+                            Set up a weekly review system every Sunday
+                        </div>
+                        <div class="suggestion-item" data-query="Triage my inbox and draft responses">
+                            Triage my inbox and draft responses
+                        </div>
+                        <div class="suggestion-item" data-query="Create a budget tracker from my spending">
+                            Create a budget tracker from my spending
+                        </div>
+                    </div>
+                </div>
+        
+                <div id="chat-history" class="chat-history hidden"></div>
+            </div>
+        </main>
+    </div>
+
+    <template id="review-report-template">
+        <div class="scorecard-container sequoia-styled">
+            <div class="sequoia-badge"><i class="fa-solid fa-award"></i> Sequoia Capital Deep Audit</div>
+            
+            <!-- Engine 5: One-line Pitch (Hero) -->
+            <div class="engine-section engine-pitch">
+                <div class="pitch-quote">
+                    <i class="fa-solid fa-quote-left"></i>
+                    <h2 class="one-line-pitch-text">Generating pitch...</h2>
+                </div>
+            </div>
+
+            <div class="engine-grid">
+                <!-- Engine 1: Review Engine -->
+                <div class="engine-section engine-review">
+                    <h3><i class="fa-solid fa-magnifying-glass"></i> Review Engine</h3>
+                    <div class="executive-summary"></div>
+                    <div class="verdict-container"></div>
+                </div>
+                
+                <!-- Engine 2: Scoring Engine -->
+                <div class="engine-section engine-scoring">
+                    <h3><i class="fa-solid fa-chart-simple"></i> Scoring Engine</h3>
+                    <div class="charts-container">
+                        <div class="chart-wrapper">
+                            <canvas class="radar-chart"></canvas>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas class="bar-chart"></canvas>
+                        </div>
+                    </div>
+                    <div class="score-grid"></div>
+                </div>
+
+                <!-- Engine 3: Contrarian Engine -->
+                <div class="engine-section engine-contrarian">
+                    <h3><i class="fa-solid fa-skull-crossbones"></i> Contrarian Engine</h3>
+                    <div class="contrarian-content"></div>
+                </div>
+
+                <!-- Engine 4: Improvement Engine -->
+                <div class="engine-section engine-improvement">
+                    <h3><i class="fa-solid fa-bolt"></i> Improvement Engine</h3>
+                    <div class="improvement-content"></div>
+                </div>
+            </div>
+
+            <div class="review-details" style="margin-top: 30px;"></div>
+        </div>
+    </template>
+
+
+    <!-- Hidden File Input for PDF/PPT upload -->
+    <input type="file" id="file-input" class="hidden" accept="application/pdf,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation">
+
+    <script src="script.js"></script>
+
+    <!-- Auth Modal -->
+    <div id="auth-modal" class="modal hidden">
+        <div class="modal-content animate-in">
+            <button class="close-modal">&times;</button>
+            <div id="login-form" class="auth-form">
+                <h2>Welcome Back</h2>
+                <p>Login to save your chat history and track your reviews.</p>
+                <input type="text" id="login-username" placeholder="Username">
+                <input type="password" id="login-password" placeholder="Password">
+                <button id="login-btn" class="submit-auth">Login</button>
+                <p class="toggle-auth">Don't have an account? <span id="show-signup">Sign Up</span></p>
+            </div>
+            <div id="signup-form" class="auth-form hidden">
+                <h2>Create Account</h2>
+                <p>Start your 3-review free trial today.</p>
+                <input type="text" id="signup-username" placeholder="Username">
+                <input type="password" id="signup-password" placeholder="Password">
+                <button id="signup-btn" class="submit-auth">Sign Up</button>
+                <p class="toggle-auth">Already have an account? <span id="show-login">Login</span></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
